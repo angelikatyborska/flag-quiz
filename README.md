@@ -33,3 +33,14 @@ https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 ### No cheating measures
 
 - After transformation, each SVG needs to be turned to png?
+
+### TO PNG options to avoid cheating
+
+resvg rust nif works, but
+doesn't support transform-box yet https://github.com/linebender/resvg/blob/main/docs/svg2-changelog.md#coordinate-systems-transformations-and-units
+
+```elixir
+  :ok = Resvg.svg_string_to_png(svg_string, "./output.png", resources_dir: "/tmp")
+```
+
+I will probably have to do with via a browser

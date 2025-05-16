@@ -1,5 +1,5 @@
 defmodule FlagQuiz.Svg do
-  def parse_file(content) do
+  def parse_string(content) do
     content = to_charlist(content)
     {doc, _rest} = :xmerl_scan.string(content)
     {:ok, doc}

@@ -4,9 +4,9 @@ defmodule FlagQuiz.SvgTest do
   @svg_file "./test/fixtures/pa.svg"
   @svg_content File.read!(@svg_file)
 
-  describe "parse_file" do
+  describe "parse_string" do
     test "parses an svg" do
-      assert {:ok, doc} = FlagQuiz.Svg.parse_file(@svg_content)
+      assert {:ok, doc} = FlagQuiz.Svg.parse_string(@svg_content)
 
       assert {:xmlElement, :svg, :svg, [], {:xmlNamespace, :"http://www.w3.org/2000/svg", []}, [],
               1,
@@ -109,7 +109,7 @@ defmodule FlagQuiz.SvgTest do
       </svg>
       """
 
-      {:ok, doc} = FlagQuiz.Svg.parse_file(input)
+      {:ok, doc} = FlagQuiz.Svg.parse_string(input)
       doc = FlagQuiz.Svg.set_attribute_on_element_with_id(doc, "flag", :transform, "rotate(180)")
       assert FlagQuiz.Svg.export_string(doc) == expected_output
     end
@@ -117,7 +117,7 @@ defmodule FlagQuiz.SvgTest do
 
   describe "export_string" do
     test "parse and export string produces the original file" do
-      {:ok, doc} = FlagQuiz.Svg.parse_file(@svg_content)
+      {:ok, doc} = FlagQuiz.Svg.parse_string(@svg_content)
 
       assert FlagQuiz.Svg.export_string(doc) == @svg_content
     end
