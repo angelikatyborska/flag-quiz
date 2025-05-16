@@ -1,0 +1,53 @@
+{
+  "name": "Panama",
+  "code": "pa",
+  "source": "https://en.wikipedia.org/wiki/Flag_of_Panama",
+  "ratio": [2, 3],
+  "palette": {
+
+  },
+  "modifications": [
+    {
+      "type": "zoom",
+      "params": {
+        "value": 1.2,
+        "objects": ["star1", "star2"]
+      }
+    },
+    {
+      "type": "zoom",
+      "params": {
+        "value": 0.8,
+        "objects": ["star1", "star2"]
+      }
+    },
+    {
+      "type": "rotate",
+      "params": {
+        "angle": 72,
+        "objects": ["star1", "star2"]
+      }
+    },
+    {
+      "type": "rotate",
+      "params": {
+        "angle": 180,
+        "objects": ["flag"]
+      }
+    },
+    {
+      "type": "flip",
+      "params": {
+        "plane": "horizontal",
+        "objects": ["flag"]
+      }
+    },
+    {
+      "type": "flip",
+      "params": {
+        "plane": "vertical",
+        "objects": ["flag"]
+      }
+    }
+  ]
+}
