@@ -96,9 +96,13 @@ defmodule FlagQuiz.SvgTest do
 
       {:ok, doc} = FlagQuiz.Svg.parse_string(input)
 
-      assert_raise(RuntimeError, "Operation set_attribute_on_element_with_id on #flagz (transform=rotate(180)) did not modify the element", fn ->
-        FlagQuiz.Svg.set_attribute_on_element_with_id(doc, "flagz", :transform, "rotate(180)")
-      end)
+      assert_raise(
+        RuntimeError,
+        "Operation set_attribute_on_element_with_id on #flagz (transform=rotate(180)) did not modify the element",
+        fn ->
+          FlagQuiz.Svg.set_attribute_on_element_with_id(doc, "flagz", :transform, "rotate(180)")
+        end
+      )
     end
 
     test "adds the attribute" do
@@ -106,6 +110,34 @@ defmodule FlagQuiz.SvgTest do
       <svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 12 8">
       <g>
         <g id="flag">
+          <path fill="#fff" d="m0 4V0h6l6 4v4H6z"/>
+        </g>
+        <g></g>
+      </g>
+      </svg>
+      """
+
+      expected_output = """
+      <svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 12 8">
+      <g>
+        <g id="flag" transform="rotate(180)">
+          <path fill="#fff" d="m0 4V0h6l6 4v4H6z"/>
+        </g>
+        <g/>
+      </g>
+      </svg>
+      """
+
+      {:ok, doc} = FlagQuiz.Svg.parse_string(input)
+      doc = FlagQuiz.Svg.set_attribute_on_element_with_id(doc, "flag", :transform, "rotate(180)")
+      assert FlagQuiz.Svg.export_string(doc) == expected_output
+    end
+
+    test "overwrites the attribute" do
+      input = """
+      <svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 12 8">
+      <g>
+        <g id="flag" transform="rotate(45)">
           <path fill="#fff" d="m0 4V0h6l6 4v4H6z"/>
         </g>
         <g></g>

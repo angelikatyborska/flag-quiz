@@ -1,8 +1,14 @@
 defmodule FlagQuiz.Svg do
   require Record
-  Record.defrecord :xmlElement, Record.extract(:xmlElement, from_lib: "xmerl/include/xmerl.hrl")
-  Record.defrecord :xmlText, Record.extract(:xmlText, from_lib: "xmerl/include/xmerl.hrl")
-  Record.defrecord :xmlAttribute, Record.extract(:xmlAttribute, from_lib: "xmerl/include/xmerl.hrl")
+  Record.defrecord(:xmlElement, Record.extract(:xmlElement, from_lib: "xmerl/include/xmerl.hrl"))
+  Record.defrecord(:xmlText, Record.extract(:xmlText, from_lib: "xmerl/include/xmerl.hrl"))
+
+  Record.defrecord(
+    :xmlAttribute,
+    Record.extract(:xmlAttribute, from_lib: "xmerl/include/xmerl.hrl")
+  )
+
+  @type t :: record(:xmlElement)
 
   def parse_string(content) do
     content = to_charlist(content)
@@ -31,7 +37,7 @@ defmodule FlagQuiz.Svg do
   end
 
   defp do_set_attribute_on_element_with_id(
-         element = xmlElement(),
+         xmlElement() = element,
          target_id,
          attribute_name,
          attribute_value
@@ -51,7 +57,15 @@ defmodule FlagQuiz.Svg do
     if has_target_id? do
       new_attr = xmlAttribute(name: attribute_name, value: to_charlist(attribute_value))
 
-      updated_attrs = attrs ++ [new_attr]
+      updated_attrs =
+        Enum.filter(attrs, fn
+          xmlAttribute(name: ^attribute_name) ->
+            false
+
+          _ ->
+            true
+        end) ++ [new_attr]
+
       xmlElement(element, attributes: updated_attrs)
     else
       updated_children =
@@ -68,4 +82,42 @@ defmodule FlagQuiz.Svg do
   end
 
   defp do_set_attribute_on_element_with_id(other, _, _, _), do: other
+
+  def get_attribute_on_element_with_id(
+        xmlElement() = element,
+        target_id,
+        attribute_name
+      ) do
+    attrs = xmlElement(element, :attributes)
+    children = xmlElement(element, :content)
+
+    has_target_id? =
+      Enum.any?(attrs, fn
+        xmlAttribute(name: :id, value: value) ->
+          to_string(value) == target_id
+
+        _ ->
+          false
+      end)
+
+    if has_target_id? do
+      Enum.find_value(attrs, fn
+        xmlAttribute(name: ^attribute_name, value: value) ->
+          value
+
+        _ ->
+          nil
+      end)
+    else
+      Enum.find_value(children, fn
+        xmlElement() = child ->
+          get_attribute_on_element_with_id(child, target_id, attribute_name)
+
+        _ ->
+          nil
+      end)
+    end
+  end
+
+  def get_attribute_on_element_with_id(other, _, _), do: other
 end
