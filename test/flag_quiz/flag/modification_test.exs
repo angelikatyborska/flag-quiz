@@ -227,4 +227,70 @@ defmodule FlagQuiz.Flag.ModificationTest do
       assert FlagQuiz.Svg.export_string(result) == expected_output
     end
   end
+
+  describe "add_stroke" do
+    test "adds stroke to specified objects" do
+      input = """
+      <svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 12 8">
+        <g><circle id="obj1" cx="50" cy="50" r="50" fill="#ff0000"/></g>
+        <g><circle id="obj2" cx="30" cy="30" r="30" fill="#00ff00"/></g>
+        <g><circle id="obj3" cx="10" cy="10" r="10" fill="#0000ff"/></g>
+      </svg>
+      """
+
+      expected_output = """
+      <svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 12 8">
+        <g><circle id="obj1" cx="50" cy="50" r="50" fill="#ff0000" stroke="#000000" stroke-width="2"/></g>
+        <g><circle id="obj2" cx="30" cy="30" r="30" fill="#00ff00" stroke="#000000" stroke-width="2"/></g>
+        <g><circle id="obj3" cx="10" cy="10" r="10" fill="#0000ff"/></g>
+      </svg>
+      """
+
+      {:ok, doc} = FlagQuiz.Svg.parse_string(input)
+
+      mod = %{
+        params: %{
+          objects: ["obj1", "obj2"],
+          color: "#000000",
+          width: 2
+        }
+      }
+
+      result = FlagQuiz.Flag.Modification.add_stroke(doc, mod)
+
+      assert FlagQuiz.Svg.export_string(result) == expected_output
+    end
+  end
+
+  describe "hide" do
+    test "hides specified objects" do
+      input = """
+      <svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 12 8">
+        <g id="obj1"><circle cx="50" cy="50" r="50" fill="#ff0000"/></g>
+        <g id="obj2"><circle cx="30" cy="30" r="30" fill="#00ff00"/></g>
+        <g id="obj3"><circle cx="10" cy="10" r="10" fill="#0000ff"/></g>
+      </svg>
+      """
+
+      expected_output = """
+      <svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 12 8">
+        <g id="obj1" style="display: none"><circle cx="50" cy="50" r="50" fill="#ff0000"/></g>
+        <g id="obj2" style="display: none"><circle cx="30" cy="30" r="30" fill="#00ff00"/></g>
+        <g id="obj3"><circle cx="10" cy="10" r="10" fill="#0000ff"/></g>
+      </svg>
+      """
+
+      {:ok, doc} = FlagQuiz.Svg.parse_string(input)
+
+      mod = %{
+        params: %{
+          objects: ["obj1", "obj2"]
+        }
+      }
+
+      result = FlagQuiz.Flag.Modification.hide(doc, mod)
+
+      assert FlagQuiz.Svg.export_string(result) == expected_output
+    end
+  end
 end

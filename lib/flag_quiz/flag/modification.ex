@@ -13,6 +13,14 @@ defmodule FlagQuiz.Flag.Modification do
           type: :change_fill,
           params: %{objects: [String.t()], value: String.t()}
         }
+  @type add_stroke :: %{
+          type: :add_stroke,
+          params: %{objects: [String.t()], color: String.t(), width: number()}
+        }
+  @type hide :: %{
+          type: :hide,
+          params: %{objects: [String.t()]}
+        }
 
   # TODO: figure out how to dry it up?
 
@@ -36,6 +44,12 @@ defmodule FlagQuiz.Flag.Modification do
 
         :change_fill ->
           change_fill(doc, mod)
+
+        :add_stroke ->
+          add_stroke(doc, mod)
+
+        :hide ->
+          hide(doc, mod)
 
         _ ->
           doc
@@ -138,6 +152,35 @@ defmodule FlagQuiz.Flag.Modification do
     Enum.reduce(objects, doc, fn object, acc ->
       acc
       |> FlagQuiz.Svg.set_attribute_on_element_with_id(object, :fill, value)
+    end)
+  end
+
+  def add_stroke(doc, mod) do
+    %{
+      params: %{
+        objects: objects,
+        color: color,
+        width: width
+      }
+    } = mod
+
+    Enum.reduce(objects, doc, fn object, acc ->
+      acc
+      |> FlagQuiz.Svg.set_attribute_on_element_with_id(object, :stroke, color)
+      |> FlagQuiz.Svg.set_attribute_on_element_with_id(object, :"stroke-width", width)
+    end)
+  end
+
+  def hide(doc, mod) do
+    %{
+      params: %{
+        objects: objects
+      }
+    } = mod
+
+    Enum.reduce(objects, doc, fn object, acc ->
+      acc
+      |> FlagQuiz.Svg.set_attribute_on_element_with_id(object, :style, "display: none")
     end)
   end
 end

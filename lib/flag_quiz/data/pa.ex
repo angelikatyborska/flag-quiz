@@ -1,4 +1,4 @@
-defmodule FlagQuiz.Data.Pa do
+defmodule FlagQuiz.Data.PA do
   @behaviour FlagQuiz.Flag
   alias FlagQuiz.Flag.Version
 
