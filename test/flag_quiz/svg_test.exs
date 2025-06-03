@@ -83,7 +83,22 @@ defmodule FlagQuiz.SvgTest do
 
   describe "set_attribute_on_element_with_id" do
     test "when element with id not found" do
-      # TODO
+      input = """
+      <svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 12 8">
+      <g>
+        <g id="flag">
+          <path fill="#fff" d="m0 4V0h6l6 4v4H6z"/>
+        </g>
+        <g></g>
+      </g>
+      </svg>
+      """
+
+      {:ok, doc} = FlagQuiz.Svg.parse_string(input)
+
+      assert_raise(RuntimeError, "Operation set_attribute_on_element_with_id on #flagz (transform=rotate(180)) did not modify the element", fn ->
+        FlagQuiz.Svg.set_attribute_on_element_with_id(doc, "flagz", :transform, "rotate(180)")
+      end)
     end
 
     test "adds the attribute" do
