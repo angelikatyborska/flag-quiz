@@ -5,6 +5,10 @@ defmodule FlagQuiz.Flag.Modification do
   @type zoom :: %{type: :zoom, params: %{objects: [String.t()], value: number}}
   @type flip :: %{type: :flip, params: %{objects: [String.t()], plane: :horizontal | :vertical}}
   @type rotate :: %{type: :rotate, params: %{objects: [String.t()], value: number}}
+  @type translate :: %{
+          type: :translate,
+          params: %{objects: [String.t()], x: String.t(), y: String.t()}
+        }
   @type swap_fill :: %{
           type: :swap_fill,
           params: %{objects1: [String.t()], objects2: [String.t()]}
@@ -38,6 +42,9 @@ defmodule FlagQuiz.Flag.Modification do
 
         :rotate ->
           rotate(doc, mod)
+
+        :translate ->
+          translate(doc, mod)
 
         :swap_fill ->
           swap_fill(doc, mod)
@@ -114,6 +121,25 @@ defmodule FlagQuiz.Flag.Modification do
         object,
         :style,
         "transform: rotate(#{value}deg); transform-box: fill-box; transform-origin: center"
+      )
+    end)
+  end
+
+  def translate(doc, mod) do
+    %{
+      params: %{
+        x: x,
+        y: y,
+        objects: objects
+      }
+    } = mod
+
+    Enum.reduce(objects, doc, fn object, acc ->
+      acc
+      |> FlagQuiz.Svg.set_attribute_on_element_with_id(
+        object,
+        :style,
+        "transform: translateX(#{x}) translateY(#{y}); transform-box: fill-box; transform-origin: center"
       )
     end)
   end

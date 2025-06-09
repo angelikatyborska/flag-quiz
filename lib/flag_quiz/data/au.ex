@@ -19,6 +19,15 @@ defmodule FlagQuiz.Data.AU do
     }
   }
 
+  @move_small_star %{
+    type: :translate,
+    params: %{
+      objects: ["star-small"],
+      x: "-320%",
+      y: "-370%"
+    }
+  }
+
   @make_stars_red %{
     type: :change_fill,
     params: %{
@@ -26,6 +35,7 @@ defmodule FlagQuiz.Data.AU do
       objects: ["star-small", "star-big", "star1", "star2", "star3", "star4"]
     }
   }
+
   @add_stars_stroke %{
     type: :add_stroke,
     params: %{
@@ -41,11 +51,22 @@ defmodule FlagQuiz.Data.AU do
       %Version{modifications: [@hide_small_star]},
       %Version{modifications: [@hide_big_star, @hide_small_star]},
       %Version{modifications: [@make_stars_red, @add_stars_stroke]},
-      %Version{modifications: [@hide_big_star, @hide_small_star]},
       %Version{modifications: [@hide_big_star, @make_stars_red, @add_stars_stroke]},
       %Version{modifications: [@hide_small_star, @make_stars_red, @add_stars_stroke]},
       %Version{
         modifications: [@hide_big_star, @hide_small_star, @make_stars_red, @add_stars_stroke]
+      },
+      %Version{
+        modifications: [@move_small_star]
+      },
+      %Version{modifications: [@hide_big_star, @move_small_star]},
+      %Version{modifications: [@make_stars_red, @add_stars_stroke, @move_small_star]},
+      %Version{
+        modifications: [@hide_big_star, @make_stars_red, @add_stars_stroke, @move_small_star]
+      },
+      %Version{modifications: [@make_stars_red, @add_stars_stroke, @move_small_star]},
+      %Version{
+        modifications: [@hide_big_star, @make_stars_red, @add_stars_stroke, @move_small_star]
       }
     ]
   end
