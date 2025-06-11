@@ -1,15 +1,25 @@
 countries = ["au", "pa", "cm", "ga"]
 
 Enum.each(countries, fn code ->
-  flag_string = File.read!("./lib/flag_quiz/data/#{code}.svg")
+  flag_string = File.read!("./lib/flag_quiz/input/#{code}.svg")
   {:ok, flag} = FlagQuiz.Svg.parse_string(flag_string)
-  module = "Elixir.FlagQuiz.Data.#{String.upcase(code)}"
-  versions = [%FlagQuiz.Flag.Version{modifications: []}] ++ apply(String.to_existing_atom(module), :versions, [])
+  module = "Elixir.FlagQuiz.Input.#{String.upcase(code)}"
+  available_modifications = apply(String.to_existing_atom(module), :modifications, [])
+  modification_conflicts = apply(String.to_existing_atom(module), :modification_conflicts, [])
+  available_modification_ids = Enum.map(available_modifications, fn m -> m.id end)
+  modification_id_combinations = FlagQuiz.Flag.Modification.generate_combinations(available_modification_ids, modification_conflicts)
+  modification_combinations = modification_id_combinations |> Enum.map(fn ids -> Enum.map(ids, fn id -> Enum.find(available_modifications, fn m -> m.id == id end) end) end)
+
+  versions = [%FlagQuiz.Flag.Version{modifications: []}] ++ Enum.map(modification_combinations, fn modifications -> %FlagQuiz.Flag.Version{modifications: modifications} end)
 
   versions
   |> Enum.with_index()
   |> Enum.each(fn {version, index} ->
-    modified_flag = FlagQuiz.Flag.Modification.apply_modifications(flag, version)
+
+    modified_flag =
+      Enum.reduce(version.modifications, flag, fn modification, acc ->
+        FlagQuiz.Flag.Tweak.apply_tweaks(acc, modification)
+      end)
 
     File.write!("./output/#{code}-#{index}.svg", FlagQuiz.Svg.export_string(modified_flag))
   end)
@@ -24,6 +34,7 @@ Enum.each(countries, fn code ->
     html {
       margin: 0;
       padding: 0;
+      background-color: lightgray;
     }
 
     img {

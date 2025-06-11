@@ -8,6 +8,10 @@ ISO 3166-1 alpha-2
 
 https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 
+### Copyright
+
+Flags are in the public domain.
+
 ### Flag patterns
 
 - 2 stripes
@@ -44,3 +48,20 @@ doesn't support transform-box yet https://github.com/linebender/resvg/blob/main/
 ```
 
 I will probably have to do with via a browser
+
+## Generating questions
+
+A question should consist of a 3x3 grid of fake flags.
+
+Flags in one question should have a similar sets of transformations. E.g. if a flag has transformations "swap colors", "make square", and "remove star", then the question should include a version with "swap colors", "swap colors and make square", "swap colors and remove star", "make square", "remove star", "make square and remove star" and so on.
+
+It should be hard to figure out what's the correct flag just by noticing the differences between fake answers.
+
+If a flag has a transformation "make square", and it's similar to another flag that has a transformation "make square", then the question should include the another flag in original, and square versions of both flags.
+
+## Common tweaks
+
+- zoom_in_central_symbol
+- zoom_out_central_symbol
+- tricolor_swap_1_and_3
+- rotate_stars (by 36 deg)
