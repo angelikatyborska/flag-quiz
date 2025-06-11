@@ -14,9 +14,9 @@ defmodule FlagQuiz.Flag.TweakTest do
 
       expected_output = """
       <svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 12 8">
-        <g id="obj1" style="transform: scale(0.5); transform-box: fill-box; transform-origin: center"><circle cx="50" cy="50" r="50"/></g>
+        <g id="obj1" style="transform: scale(0.5) scale(-1, 1); transform-box: fill-box; transform-origin: center;"><circle cx="50" cy="50" r="50"/></g>
         <g id="obj2"><circle cx="30" cy="30" r="30"/></g>
-        <g id="obj3" style="transform: scale(-1, 1); transform-box: fill-box; transform-origin: center"><circle cx="10" cy="10" r="10"/></g>
+        <g id="obj3" style="transform: scale(-1, 1); transform-box: fill-box; transform-origin: center;"><circle cx="10" cy="10" r="10"/></g>
       </svg>
       """
 
@@ -24,11 +24,11 @@ defmodule FlagQuiz.Flag.TweakTest do
 
       tweaks = [
         %{type: :zoom, params: %{value: 0.5, objects: ["obj1"]}},
-        %{type: :flip, params: %{plane: :horizontal, objects: ["obj3"]}}
+        %{type: :flip, params: %{plane: :horizontal, objects: ["obj1", "obj3"]}}
       ]
 
       result =
-        FlagQuiz.Flag.Tweak.apply_tweak(doc, %FlagQuiz.Flag.Modification{
+        FlagQuiz.Flag.Tweak.apply_tweaks(doc, %FlagQuiz.Flag.Modification{
           tweaks: tweaks
         })
 
@@ -48,9 +48,9 @@ defmodule FlagQuiz.Flag.TweakTest do
 
       expected_output = """
       <svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 12 8">
-        <g id="obj1" style="transform: scale(0.5); transform-box: fill-box; transform-origin: center"><circle cx="50" cy="50" r="50"/></g>
+        <g id="obj1" style="transform: scale(0.5); transform-box: fill-box; transform-origin: center;"><circle cx="50" cy="50" r="50"/></g>
         <g id="obj2"><circle cx="30" cy="30" r="30"/></g>
-        <g id="obj3" style="transform: scale(0.5); transform-box: fill-box; transform-origin: center"><circle cx="10" cy="10" r="10"/></g>
+        <g id="obj3" style="transform: scale(0.5); transform-box: fill-box; transform-origin: center;"><circle cx="10" cy="10" r="10"/></g>
       </svg>
       """
 
@@ -78,8 +78,8 @@ defmodule FlagQuiz.Flag.TweakTest do
 
       expected_output = """
       <svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 12 8">
-        <g id="obj1" style="transform: scale(-1, 1); transform-box: fill-box; transform-origin: center"><circle cx="50" cy="50" r="50"/></g>
-        <g id="obj2" style="transform: scale(-1, 1); transform-box: fill-box; transform-origin: center"><circle cx="30" cy="30" r="30"/></g>
+        <g id="obj1" style="transform: scale(-1, 1); transform-box: fill-box; transform-origin: center;"><circle cx="50" cy="50" r="50"/></g>
+        <g id="obj2" style="transform: scale(-1, 1); transform-box: fill-box; transform-origin: center;"><circle cx="30" cy="30" r="30"/></g>
         <g id="obj3"><circle cx="10" cy="10" r="10"/></g>
       </svg>
       """
@@ -109,8 +109,8 @@ defmodule FlagQuiz.Flag.TweakTest do
 
       expected_output = """
       <svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 12 8">
-        <g id="obj1" style="transform: scale(1, -1); transform-box: fill-box; transform-origin: center"><circle cx="50" cy="50" r="50"/></g>
-        <g id="obj2" style="transform: scale(1, -1); transform-box: fill-box; transform-origin: center"><circle cx="30" cy="30" r="30"/></g>
+        <g id="obj1" style="transform: scale(1, -1); transform-box: fill-box; transform-origin: center;"><circle cx="50" cy="50" r="50"/></g>
+        <g id="obj2" style="transform: scale(1, -1); transform-box: fill-box; transform-origin: center;"><circle cx="30" cy="30" r="30"/></g>
         <g id="obj3"><circle cx="10" cy="10" r="10"/></g>
       </svg>
       """
@@ -142,8 +142,8 @@ defmodule FlagQuiz.Flag.TweakTest do
 
       expected_output = """
       <svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 12 8">
-        <g id="obj1" style="transform: rotate(45deg); transform-box: fill-box; transform-origin: center"><circle cx="50" cy="50" r="50"/></g>
-        <g id="obj2" style="transform: rotate(45deg); transform-box: fill-box; transform-origin: center"><circle cx="30" cy="30" r="30"/></g>
+        <g id="obj1" style="transform: rotate(45deg); transform-box: fill-box; transform-origin: center;"><circle cx="50" cy="50" r="50"/></g>
+        <g id="obj2" style="transform: rotate(45deg); transform-box: fill-box; transform-origin: center;"><circle cx="30" cy="30" r="30"/></g>
         <g id="obj3"><circle cx="10" cy="10" r="10"/></g>
       </svg>
       """

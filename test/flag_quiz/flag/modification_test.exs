@@ -2,12 +2,30 @@ defmodule FlagQuiz.Flag.ModificationTest do
   use ExUnit.Case
   alias FlagQuiz.Flag.Modification
 
-  describe "generate_combinations" do
+  test "generate_combination" do
+    all = [
+      %Modification{id: :one, tweaks: []},
+      %Modification{id: :two, tweaks: []},
+      %Modification{id: :three, tweaks: []}
+    ]
+
+    conflicts = [{:one, :three}]
+
+    assert Modification.generate_combinations(all, conflicts) == [
+             [%Modification{id: :one, tweaks: []}],
+             [%Modification{id: :two, tweaks: []}],
+             [%Modification{id: :three, tweaks: []}],
+             [%Modification{id: :one, tweaks: []}, %Modification{id: :two, tweaks: []}],
+             [%Modification{id: :two, tweaks: []}, %Modification{id: :three, tweaks: []}]
+           ]
+  end
+
+  describe "generate_id_combinations" do
     test "1 item, no conflicts" do
       all = [:one]
       conflicts = []
 
-      assert Modification.generate_combinations(all, conflicts) == [
+      assert Modification.generate_id_combinations(all, conflicts) == [
                [:one]
              ]
     end
@@ -16,7 +34,7 @@ defmodule FlagQuiz.Flag.ModificationTest do
       all = [:one, :two]
       conflicts = []
 
-      assert Modification.generate_combinations(all, conflicts) == [
+      assert Modification.generate_id_combinations(all, conflicts) == [
                [:one],
                [:two],
                [:one, :two]
@@ -27,7 +45,7 @@ defmodule FlagQuiz.Flag.ModificationTest do
       all = [:one, :two, :three]
       conflicts = []
 
-      assert Modification.generate_combinations(all, conflicts) == [
+      assert Modification.generate_id_combinations(all, conflicts) == [
                [:one],
                [:two],
                [:three],
@@ -42,7 +60,7 @@ defmodule FlagQuiz.Flag.ModificationTest do
       all = [:one, :two, :three]
       conflicts = [{:one, :three}]
 
-      assert Modification.generate_combinations(all, conflicts) == [
+      assert Modification.generate_id_combinations(all, conflicts) == [
                [:one],
                [:two],
                [:three],
@@ -55,7 +73,7 @@ defmodule FlagQuiz.Flag.ModificationTest do
       all = [:one, :two, :three, :four]
       conflicts = []
 
-      assert Modification.generate_combinations(all, conflicts) == [
+      assert Modification.generate_id_combinations(all, conflicts) == [
                [:one],
                [:two],
                [:three],
@@ -78,7 +96,7 @@ defmodule FlagQuiz.Flag.ModificationTest do
       all = [:one, :two, :three, :four]
       conflicts = [{:one, :two}, {:two, :four}]
 
-      assert Modification.generate_combinations(all, conflicts) == [
+      assert Modification.generate_id_combinations(all, conflicts) == [
                [:one],
                [:two],
                [:three],

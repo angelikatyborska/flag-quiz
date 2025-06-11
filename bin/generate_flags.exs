@@ -6,9 +6,7 @@ Enum.each(countries, fn code ->
   module = "Elixir.FlagQuiz.Input.#{String.upcase(code)}"
   available_modifications = apply(String.to_existing_atom(module), :modifications, [])
   modification_conflicts = apply(String.to_existing_atom(module), :modification_conflicts, [])
-  available_modification_ids = Enum.map(available_modifications, fn m -> m.id end)
-  modification_id_combinations = FlagQuiz.Flag.Modification.generate_combinations(available_modification_ids, modification_conflicts)
-  modification_combinations = modification_id_combinations |> Enum.map(fn ids -> Enum.map(ids, fn id -> Enum.find(available_modifications, fn m -> m.id == id end) end) end)
+  modification_combinations = FlagQuiz.Flag.Modification.generate_combinations(available_modifications, modification_conflicts)
 
   versions = [%FlagQuiz.Flag.Version{modifications: []}] ++ Enum.map(modification_combinations, fn modifications -> %FlagQuiz.Flag.Version{modifications: modifications} end)
 
@@ -24,7 +22,11 @@ Enum.each(countries, fn code ->
     File.write!("./output/#{code}-#{index}.svg", FlagQuiz.Svg.export_string(modified_flag))
   end)
 
-  imgs = versions |> Enum.with_index() |> Enum.shuffle() |> Enum.map(fn {_, index} -> "<img src=\"./#{code}-#{index}.svg\" />" end)
+  imgs =
+    versions
+     |> Enum.with_index()
+#    |> Enum.shuffle()
+    |> Enum.map(fn {_, index} -> "<img src=\"./#{code}-#{index}.svg\" />" end)
   html = """
   <!DOCTYPE html>
   <html>

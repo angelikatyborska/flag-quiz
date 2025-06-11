@@ -64,6 +64,8 @@ defmodule FlagQuiz.Flag.Tweak do
     end)
   end
 
+  @transform_origin "transform-box: fill-box; transform-origin: center;"
+
   def zoom(doc, mod) do
     %{
       params: %{
@@ -73,12 +75,7 @@ defmodule FlagQuiz.Flag.Tweak do
     } = mod
 
     Enum.reduce(objects, doc, fn object, acc ->
-      acc
-      |> FlagQuiz.Svg.set_attribute_on_element_with_id(
-        object,
-        :style,
-        "transform: scale(#{value}); transform-box: fill-box; transform-origin: center"
-      )
+      set_transform(acc, object, "scale(#{value})")
     end)
   end
 
@@ -98,12 +95,7 @@ defmodule FlagQuiz.Flag.Tweak do
           "1, -1"
         end
 
-      acc
-      |> FlagQuiz.Svg.set_attribute_on_element_with_id(
-        object,
-        :style,
-        "transform: scale(#{value}); transform-box: fill-box; transform-origin: center"
-      )
+      set_transform(acc, object, "scale(#{value})")
     end)
   end
 
@@ -116,12 +108,7 @@ defmodule FlagQuiz.Flag.Tweak do
     } = mod
 
     Enum.reduce(objects, doc, fn object, acc ->
-      acc
-      |> FlagQuiz.Svg.set_attribute_on_element_with_id(
-        object,
-        :style,
-        "transform: rotate(#{value}deg); transform-box: fill-box; transform-origin: center"
-      )
+      set_transform(acc, object, "rotate(#{value}deg)")
     end)
   end
 
@@ -135,12 +122,7 @@ defmodule FlagQuiz.Flag.Tweak do
     } = mod
 
     Enum.reduce(objects, doc, fn object, acc ->
-      acc
-      |> FlagQuiz.Svg.set_attribute_on_element_with_id(
-        object,
-        :style,
-        "transform: translateX(#{x}) translateY(#{y}); transform-box: fill-box; transform-origin: center"
-      )
+      set_transform(acc, object, "translateX(#{x}) translateY(#{y})")
     end)
   end
 
@@ -208,5 +190,33 @@ defmodule FlagQuiz.Flag.Tweak do
       acc
       |> FlagQuiz.Svg.set_attribute_on_element_with_id(object, :style, "display: none")
     end)
+  end
+
+  defp set_transform(svg, id, transform) do
+    current_style = FlagQuiz.Svg.get_attribute_on_element_with_id(svg, id, :style)
+    current_style = to_string(current_style) || ""
+
+    new_style =
+      if String.contains?(current_style, "transform:") do
+        String.split(current_style, "; ", trim: true)
+        |> Enum.map(fn style ->
+          if String.starts_with?(style, "transform:") do
+            style <> " #{transform}"
+          else
+            style
+          end
+        end)
+        |> Enum.join("; ")
+      else
+        "transform: #{transform}; #{@transform_origin}"
+      end
+
+    new_style =
+      if String.contains?(new_style, transform) do
+        new_style
+      else
+      end
+
+    FlagQuiz.Svg.set_attribute_on_element_with_id(svg, id, :style, new_style)
   end
 end
