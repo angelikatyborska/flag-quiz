@@ -120,4 +120,46 @@ defmodule FlagQuiz.Svg do
   end
 
   def get_attribute_on_element_with_id(other, _, _), do: other
+
+  @spec set_attribute_on_root_element(t(), atom, String.t()) :: t()
+  def set_attribute_on_root_element(doc, attribute_name, attribute_value) do
+    attrs = xmlElement(doc, :attributes)
+    new_attr = xmlAttribute(name: attribute_name, value: to_charlist(attribute_value))
+
+    updated_attrs =
+      Enum.filter(attrs, fn
+        xmlAttribute(name: ^attribute_name) ->
+          false
+
+        _ ->
+          true
+      end) ++ [new_attr]
+
+    xmlElement(doc, attributes: updated_attrs)
+  end
+
+  @spec get_attribute_on_root_element(t(), atom()) :: nil | String.t()
+  def get_attribute_on_root_element(xmlElement() = doc, attribute_name) do
+    attrs = xmlElement(doc, :attributes)
+
+    Enum.find_value(attrs, fn
+      xmlAttribute(name: ^attribute_name, value: value) ->
+        value |> to_string()
+
+      _ ->
+        nil
+    end)
+  end
+
+  def number_to_string_number(x) do
+    if is_float(x) do
+      :erlang.float_to_binary(x, decimals: 2)
+    else
+      Integer.to_string(x)
+    end
+  end
+
+  def string_number_to_number(x) do
+    x |> Float.parse() |> elem(0)
+  end
 end

@@ -1,4 +1,4 @@
-countries = ["au", "pa", "cm", "ga"]
+countries = ["ao", "au", "pa", "cm", "mn", "ga"]
 
 Enum.each(countries, fn code ->
   flag_string = File.read!("./lib/flag_quiz/input/#{code}.svg")
@@ -19,6 +19,8 @@ Enum.each(countries, fn code ->
         FlagQuiz.Flag.Tweak.apply_tweaks(acc, modification)
       end)
 
+      # TODO: remove old files
+      # TODO: put input and output in dir per country
     File.write!("./output/#{code}-#{index}.svg", FlagQuiz.Svg.export_string(modified_flag))
   end)
 
@@ -46,7 +48,7 @@ Enum.each(countries, fn code ->
   </style>
   </head>
   <body>
-  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 10px;">
+  <div style="display: grid; grid-template-columns: repeat(8, 1fr); align-items: center; gap: 10px; padding: 10px;">
   #{imgs}
   </div>
   </body>

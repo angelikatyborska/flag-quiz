@@ -21,9 +21,14 @@ defmodule FlagQuiz.Flag.Tweak do
           type: :add_stroke,
           params: %{objects: [String.t()], color: String.t(), width: number()}
         }
+  # TODO add reveal
   @type hide :: %{
           type: :hide,
           params: %{objects: [String.t()]}
+        }
+  @type scale_x_flag :: %{
+          type: :scale_x_flag,
+          params: %{background_objects: [String.t()], value: number()}
         }
 
   # TODO: figure out how to dry it up?
@@ -57,6 +62,9 @@ defmodule FlagQuiz.Flag.Tweak do
 
         :hide ->
           hide(doc, mod)
+
+        :scale_x_flag ->
+          scale_x_flag(doc, mod)
 
         _ ->
           doc
@@ -189,6 +197,55 @@ defmodule FlagQuiz.Flag.Tweak do
     Enum.reduce(objects, doc, fn object, acc ->
       acc
       |> FlagQuiz.Svg.set_attribute_on_element_with_id(object, :style, "display: none")
+    end)
+  end
+
+  def scale_x_flag(doc, mod) do
+    %{
+      params: %{
+        background_objects: background_objects,
+        value: value
+      }
+    } = mod
+
+    original_width =
+      FlagQuiz.Svg.get_attribute_on_root_element(doc, :width)
+      |> FlagQuiz.Svg.string_number_to_number()
+
+    height =
+      FlagQuiz.Svg.get_attribute_on_root_element(doc, :height)
+      |> FlagQuiz.Svg.string_number_to_number()
+
+    original_viewbox = FlagQuiz.Svg.get_attribute_on_root_element(doc, :viewBox)
+
+    new_width = original_width * value
+
+    doc =
+      FlagQuiz.Svg.set_attribute_on_root_element(
+        doc,
+        :width,
+        new_width |> FlagQuiz.Svg.number_to_string_number()
+      )
+
+    [x1, y1, x2, y2] =
+      if original_viewbox do
+        String.split(original_viewbox, " ") |> Enum.map(&FlagQuiz.Svg.string_number_to_number/1)
+      else
+        [0, 0, original_width, height]
+      end
+
+    x_diff = (x2 - x1) * (1 - value)
+
+    new_viewbox =
+      [x1 + x_diff * 0.5, y1, x2 - x_diff, y2]
+      |> Enum.map(&FlagQuiz.Svg.number_to_string_number/1)
+      |> Enum.join(" ")
+
+    doc =
+      FlagQuiz.Svg.set_attribute_on_root_element(doc, :viewBox, new_viewbox)
+
+    Enum.reduce(background_objects, doc, fn object, acc ->
+      set_transform(acc, object, "scale(#{value}, 1)")
     end)
   end
 

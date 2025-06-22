@@ -294,4 +294,68 @@ defmodule FlagQuiz.Flag.TweakTest do
       assert FlagQuiz.Svg.export_string(result) == expected_output
     end
   end
+
+  describe "scale_x_flag" do
+    test "stretches the svg width" do
+      input = """
+      <svg xmlns="http://www.w3.org/2000/svg" height="600" width="900" viewBox="0 0 12 8">
+        <g id="obj1"><circle cx="50" cy="50" r="50"/></g>
+        <g id="obj2"><circle cx="30" cy="30" r="30"/></g>
+        <g id="obj3"><circle cx="10" cy="10" r="10"/></g>
+      </svg>
+      """
+
+      expected_output = """
+      <svg xmlns="http://www.w3.org/2000/svg" height="600" width="1800.00" viewBox="-6.00 0.00 24.00 8.00">
+        <g id="obj1" style="transform: scale(2, 1); transform-box: fill-box; transform-origin: center;"><circle cx="50" cy="50" r="50"/></g>
+        <g id="obj2" style="transform: scale(2, 1); transform-box: fill-box; transform-origin: center;"><circle cx="30" cy="30" r="30"/></g>
+        <g id="obj3"><circle cx="10" cy="10" r="10"/></g>
+      </svg>
+      """
+
+      {:ok, doc} = FlagQuiz.Svg.parse_string(input)
+
+      mod = %{
+        params: %{
+          background_objects: ["obj1", "obj2"],
+          value: 2
+        }
+      }
+
+      result = Tweak.scale_x_flag(doc, mod)
+
+      assert FlagQuiz.Svg.export_string(result) == expected_output
+    end
+
+    test "works if original width if float" do
+      input = """
+      <svg xmlns="http://www.w3.org/2000/svg" height="600" width="900.2" viewBox="0 0 12 8">
+        <g id="obj1"><circle cx="50" cy="50" r="50"/></g>
+        <g id="obj2"><circle cx="30" cy="30" r="30"/></g>
+        <g id="obj3"><circle cx="10" cy="10" r="10"/></g>
+      </svg>
+      """
+
+      expected_output = """
+      <svg xmlns="http://www.w3.org/2000/svg" height="600" width="450.10" viewBox="3.00 0.00 6.00 8.00">
+        <g id="obj1" style="transform: scale(0.5, 1); transform-box: fill-box; transform-origin: center;"><circle cx="50" cy="50" r="50"/></g>
+        <g id="obj2" style="transform: scale(0.5, 1); transform-box: fill-box; transform-origin: center;"><circle cx="30" cy="30" r="30"/></g>
+        <g id="obj3"><circle cx="10" cy="10" r="10"/></g>
+      </svg>
+      """
+
+      {:ok, doc} = FlagQuiz.Svg.parse_string(input)
+
+      mod = %{
+        params: %{
+          background_objects: ["obj1", "obj2"],
+          value: 0.5
+        }
+      }
+
+      result = Tweak.scale_x_flag(doc, mod)
+
+      assert FlagQuiz.Svg.export_string(result) == expected_output
+    end
+  end
 end
