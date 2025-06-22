@@ -1,6 +1,13 @@
 countries = ["ao", "au", "pa", "cm", "mn", "ga"]
 
+output_dir = "./output"
+
+File.rm_rf(output_dir)
+File.mkdir(output_dir)
+
 Enum.each(countries, fn code ->
+   File.mkdir(Path.join(output_dir, "/#{code}"))
+
   flag_string = File.read!("./lib/flag_quiz/input/#{code}.svg")
   {:ok, flag} = FlagQuiz.Svg.parse_string(flag_string)
   module = "Elixir.FlagQuiz.Input.#{String.upcase(code)}"
@@ -19,16 +26,15 @@ Enum.each(countries, fn code ->
         FlagQuiz.Flag.Tweak.apply_tweaks(acc, modification)
       end)
 
-      # TODO: remove old files
       # TODO: put input and output in dir per country
-    File.write!("./output/#{code}-#{index}.svg", FlagQuiz.Svg.export_string(modified_flag))
+    File.write!(Path.join(output_dir, "/#{code}/#{index}.svg"), FlagQuiz.Svg.export_string(modified_flag))
   end)
 
   imgs =
     versions
      |> Enum.with_index()
 #    |> Enum.shuffle()
-    |> Enum.map(fn {_, index} -> "<img src=\"./#{code}-#{index}.svg\" />" end)
+    |> Enum.map(fn {_, index} -> "<img src=\"./#{index}.svg\" />" end)
   html = """
   <!DOCTYPE html>
   <html>
@@ -54,6 +60,6 @@ Enum.each(countries, fn code ->
   </body>
   </html>
   """
-  File.write("./output/#{code}.html", html)
+  File.write(Path.join(output_dir, "/#{code}/index.html"), html)
 
 end)
