@@ -34,6 +34,28 @@ defmodule FlagQuiz.Flag.TweakTest do
 
       assert FlagQuiz.Svg.export_string(result) == expected_output
     end
+
+    test "raises on unknown tweak" do
+      input = """
+      <svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 12 8">
+        <g id="obj1"><circle cx="50" cy="50" r="50" fill="#ff0000"/></g>
+        <g id="obj2"><circle cx="30" cy="30" r="30" fill="#00ff00"/></g>
+        <g id="obj3"><circle cx="10" cy="10" r="10" fill="#0000ff"/></g>
+      </svg>
+      """
+
+      {:ok, doc} = FlagQuiz.Svg.parse_string(input)
+
+      tweaks = [
+        %{type: :rickroll}
+      ]
+
+      assert_raise RuntimeError, "Unknown tweak rickroll", fn ->
+        FlagQuiz.Flag.Tweak.apply_tweaks(doc, %FlagQuiz.Flag.Modification{
+          tweaks: tweaks
+        })
+      end
+    end
   end
 
   describe "zoom" do
@@ -290,6 +312,38 @@ defmodule FlagQuiz.Flag.TweakTest do
       }
 
       result = Tweak.hide(doc, mod)
+
+      assert FlagQuiz.Svg.export_string(result) == expected_output
+    end
+  end
+
+  describe "reveal" do
+    test "reveals specified objects" do
+      input = """
+      <svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 12 8">
+        <g id="obj1" style="display: none"><circle cx="50" cy="50" r="50" fill="#ff0000"/></g>
+        <g id="obj2" style="display: none"><circle cx="30" cy="30" r="30" fill="#00ff00"/></g>
+        <g id="obj3" style="display: none"><circle cx="10" cy="10" r="10" fill="#0000ff"/></g>
+      </svg>
+      """
+
+      expected_output = """
+      <svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 12 8">
+        <g id="obj1" style="display: block"><circle cx="50" cy="50" r="50" fill="#ff0000"/></g>
+        <g id="obj2" style="display: block"><circle cx="30" cy="30" r="30" fill="#00ff00"/></g>
+        <g id="obj3" style="display: none"><circle cx="10" cy="10" r="10" fill="#0000ff"/></g>
+      </svg>
+      """
+
+      {:ok, doc} = FlagQuiz.Svg.parse_string(input)
+
+      mod = %{
+        params: %{
+          objects: ["obj1", "obj2"]
+        }
+      }
+
+      result = Tweak.reveal(doc, mod)
 
       assert FlagQuiz.Svg.export_string(result) == expected_output
     end

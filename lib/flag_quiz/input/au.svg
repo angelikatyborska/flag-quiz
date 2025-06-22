@@ -14,6 +14,7 @@
 </g>
 <g fill="#fff">
 <use id="star-big" xlink:href="#Star7" transform="translate(2520, 3780) scale(2.1)"/>
+<use id="star-big-5arm" xlink:href="#Star5" transform="translate(2520, 3780) scale(3)" style="display: none"/>
 <use id="star1" xlink:href="#Star7" x="7560" y="4200"/>
 <use id="star2" xlink:href="#Star7" x="6300" y="2205"/>
 <use id="star3" xlink:href="#Star7" x="7560" y="840"/>

@@ -21,9 +21,12 @@ defmodule FlagQuiz.Flag.Tweak do
           type: :add_stroke,
           params: %{objects: [String.t()], color: String.t(), width: number()}
         }
-  # TODO add reveal
   @type hide :: %{
           type: :hide,
+          params: %{objects: [String.t()]}
+        }
+  @type reveal :: %{
+          type: :reveal,
           params: %{objects: [String.t()]}
         }
   @type scale_x_flag :: %{
@@ -63,11 +66,14 @@ defmodule FlagQuiz.Flag.Tweak do
         :hide ->
           hide(doc, mod)
 
+        :reveal ->
+          reveal(doc, mod)
+
         :scale_x_flag ->
           scale_x_flag(doc, mod)
 
-        _ ->
-          doc
+        tweak ->
+          raise "Unknown tweak #{tweak}"
       end
     end)
   end
@@ -197,6 +203,19 @@ defmodule FlagQuiz.Flag.Tweak do
     Enum.reduce(objects, doc, fn object, acc ->
       acc
       |> FlagQuiz.Svg.set_attribute_on_element_with_id(object, :style, "display: none")
+    end)
+  end
+
+  def reveal(doc, mod) do
+    %{
+      params: %{
+        objects: objects
+      }
+    } = mod
+
+    Enum.reduce(objects, doc, fn object, acc ->
+      acc
+      |> FlagQuiz.Svg.set_attribute_on_element_with_id(object, :style, "display: block")
     end)
   end
 
