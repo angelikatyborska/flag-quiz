@@ -1,4 +1,5 @@
-countries = ["ao", "au", "pa", "cm", "mn", "ga"]
+# TODO: autoread country list
+countries = ["ao", "au", "cl", "pa", "cm", "mn", "ga"]
 
 output_dir = "./output"
 
