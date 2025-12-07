@@ -35,24 +35,24 @@ Enum.each(countries, fn code ->
           FlagQuiz.Flag.Tweak.apply_tweaks(acc, modification)
         end)
 
-      # TODO: ideally ids should be stable for the same modification ids
-      id = for _ <- 1..6, into: "", do: <<Enum.random(?a..?z)>>
+      modifications = Enum.map(version.modifications, & &1.id)
 
-      # TODO: put input and output in dir per country
+      id = :crypto.hash(:md5, "#{code}.#{Enum.join(modifications, ",")}") |> Base.encode16(case: :lower)
+      filename = "#{code}.#{id}.svg"
+
       File.write!(
-        Path.join(output_dir, "/#{code}/#{id}.svg"),
+        Path.join(output_dir, "/#{code}/#{filename}"),
         FlagQuiz.Svg.export_string(modified_flag)
       )
 
-      modifications = Enum.map(version.modifications, & &1.id)
-      %{id: id, modifications: modifications}
+      %{id: id, modifications: modifications, filename: filename}
     end)
 
   File.write!(Path.join(output_dir, "/#{code}/index.json"), Jason.encode!(data))
 
   imgs =
     data
-    |> Enum.map(fn flag -> "<img src=\"./#{flag.id}.svg\" />" end)
+    |> Enum.map(fn flag -> "<img src=\"./#{flag.filename}\" />" end)
 
   html = """
   <!DOCTYPE html>
