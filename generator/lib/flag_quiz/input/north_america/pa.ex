@@ -30,6 +30,14 @@ defmodule FlagQuiz.Input.PA do
     }
   }
 
+  @make_blue_lighter %{
+    type: :change_fill,
+    params: %{
+      objects: ["star2", "rectangle2"],
+      value: "#1188bf"
+    }
+  }
+
   @swap_colors_horizontally %{
     type: :swap_fill,
     params: %{
@@ -45,6 +53,7 @@ defmodule FlagQuiz.Input.PA do
       objects2: ["star2", "rectangle1"]
     }
   }
+
   @swap_colors_to_horizontal2 %{
     type: :swap_fill,
     params: %{
@@ -58,12 +67,15 @@ defmodule FlagQuiz.Input.PA do
       {:zoom_in_central_symbol, :zoom_out_central_symbol},
       {:swap_colors_horizontally, :swap_colors_to_horizontal1},
       {:swap_colors_horizontally, :swap_colors_to_horizontal2},
-      {:swap_colors_to_horizontal1, :swap_colors_to_horizontal2}
+      {:swap_colors_to_horizontal1, :swap_colors_to_horizontal2},
+      {:make_blue_lighter, :swap_colors_to_horizontal1},
+      {:make_blue_lighter, :swap_colors_to_horizontal2}
     ]
   end
 
   def modifications do
     [
+      %Modification{id: :make_blue_lighter, tweaks: [@make_blue_lighter]},
       %Modification{id: :zoom_in_central_symbol, tweaks: [@zoom_in_stars]},
       %Modification{id: :zoom_out_central_symbol, tweaks: [@zoom_out_stars]},
       %Modification{id: :rotate_stars, tweaks: [@rotate_stars]},
