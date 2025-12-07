@@ -35,6 +35,7 @@ Enum.each(countries, fn code ->
           FlagQuiz.Flag.Tweak.apply_tweaks(acc, modification)
         end)
 
+      # TODO: ideally ids should be stable for the same modification ids
       id = for _ <- 1..6, into: "", do: <<Enum.random(?a..?z)>>
 
       # TODO: put input and output in dir per country
