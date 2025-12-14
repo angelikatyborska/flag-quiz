@@ -15,7 +15,8 @@ defmodule FlagQuiz.Application do
       # Start a worker by calling: FlagQuiz.Worker.start_link(arg)
       # {FlagQuiz.Worker, arg},
       # Start to serve requests, typically the last entry
-      FlagQuizWeb.Endpoint
+      FlagQuizWeb.Endpoint,
+      Place
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

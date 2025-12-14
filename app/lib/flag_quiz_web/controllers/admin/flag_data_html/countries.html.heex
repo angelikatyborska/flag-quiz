@@ -1,7 +1,16 @@
+<h1>
+  <a href={~p"/admin/continents"}>Continents</a>
+  / <a href={~p"/admin/continents/#{@continent}"}>{@continent}</a>
+</h1>
 <ul>
   <%= for country <- @countries do %>
+    <% country_code = String.downcase(country.iso2) %>
     <li>
-      <a href={~p"/admin/continents/#{@continent}/#{country}"}>{country}</a>
+      <a href={~p"/admin/continents/#{@continent}/#{country_code}"}>
+        {country.name} ({country_code}) <% flags = Map.get(@country_flags, country_code)
+        flag_count = if flags, do: Enum.count(flags), else: 0 %>
+      </a>
+      ({flag_count})
     </li>
   <% end %>
 </ul>

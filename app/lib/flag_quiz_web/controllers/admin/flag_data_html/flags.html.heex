@@ -1,7 +1,25 @@
-<ul>
+<h1>
+  <a href={~p"/admin/continents"}>Continents</a>
+  / <a href={~p"/admin/continents/#{@continent}"}>{@continent}</a>
+  /
+  <a href={~p"/admin/continents/#{@continent}/#{String.downcase(@country.iso2)}"}>
+    {@country.name} ({Enum.count(@flags)})
+  </a>
+</h1>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 400px)); gap: 20px;">
   <%= for flag <- @flags do %>
-    <li>
-      <img src={~p"/assets/flags/#{@continent}/#{@country}/#{Map.get(flag, "filename")}"} width="300"/>
-    </li>
+    <div>
+      <img
+        src={
+          ~p"/assets/flags/#{@continent}/#{String.downcase(@country.iso2)}/#{Map.get(flag, "filename")}"
+        }
+        width="300"
+        style="width: 100%;"
+      />
+      <p>
+        {Map.get(flag, "modifications") |> Enum.join(", ")}
+      </p>
+    </div>
   <% end %>
-</ul>
+</div>
