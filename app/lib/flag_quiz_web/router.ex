@@ -39,5 +39,15 @@ defmodule FlagQuizWeb.Router do
 
       live_dashboard "/dashboard", metrics: FlagQuizWeb.Telemetry
     end
+
+    scope "/admin", FlagQuizWeb.Admin do
+      pipe_through :browser
+
+      scope "/continents" do
+        get "/", FlagDataController, :continents
+        get "/:continent", FlagDataController, :countries
+        get "/:continent/:country", FlagDataController, :flags
+      end
+    end
   end
 end

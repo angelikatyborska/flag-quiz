@@ -1,14 +1,18 @@
 input_dir = "./lib/flag_quiz/input"
-output_dir = "./output"
+output_dir_data = "../app/priv/data/"
+output_dir_images = "../app/priv/static/assets/flags/"
 
-File.rm_rf(output_dir)
-File.mkdir(output_dir)
+File.rm_rf(output_dir_data)
+File.rm_rf(output_dir_images)
+File.mkdir(output_dir_data)
+File.mkdir(output_dir_images)
 
 continent_dirs = Path.wildcard("#{input_dir}/*")
 
 Enum.each(continent_dirs, fn continent_dir ->
   continent = String.split(continent_dir, "/", trim: true) |> List.last()
-  File.mkdir(Path.join(output_dir, "/#{continent}"))
+  File.mkdir(Path.join(output_dir_data, "/#{continent}"))
+  File.mkdir(Path.join(output_dir_images, "/#{continent}"))
 
   country_dirs = Path.wildcard("#{continent_dir}/*.ex")
 
@@ -19,8 +23,10 @@ Enum.each(continent_dirs, fn continent_dir ->
       |> String.split(".")
       |> List.first()
 
-    country_output_dir = Path.join(output_dir, "/#{continent}/#{code}")
+    country_output_dir = Path.join(output_dir_data, "/#{continent}/#{code}")
+    country_output_dir_images = Path.join(output_dir_images, "/#{continent}/#{code}")
     File.mkdir(country_output_dir)
+    File.mkdir(country_output_dir_images)
 
     flag_string = File.read!("#{input_dir}/#{continent}/#{code}.svg")
     {:ok, flag} = FlagQuiz.Svg.parse_string(flag_string)
@@ -57,7 +63,7 @@ Enum.each(continent_dirs, fn continent_dir ->
         filename = "#{code}.#{id}.svg"
 
         File.write!(
-          Path.join(country_output_dir, filename),
+          Path.join(country_output_dir_images, filename),
           FlagQuiz.Svg.export_string(modified_flag)
         )
 
@@ -96,6 +102,7 @@ Enum.each(continent_dirs, fn continent_dir ->
     </html>
     """
 
+    # TODO: remove creating this file
     File.write(Path.join(country_output_dir, "index.html"), html)
   end)
 end)

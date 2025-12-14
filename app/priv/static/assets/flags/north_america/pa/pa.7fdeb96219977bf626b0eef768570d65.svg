@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 12 8">
+  <g id="flag">
+    <path fill="#fff" d="m0 4V0h6l6 4v4H6z"/>
+    <path id="rectangle1" d="M 6 0 L 12 0 L 12 4 L 6 4 L 6 0 Z" fill="#da121a"/>
+    <path id="star1" d="M 9 5 L 9.6498 7 L 7.9485 5.7639 L 10.0515 5.7639 L 8.3502 7 L 9 5 Z" fill="#072357"/>
+    <path id="rectangle2" d="M 0 4 L 6 4 L 6 8 L 0 8 L 0 4 Z" fill="#072357"/>
+    <path id="star2" d="M 3 1 L 3.6498 3 L 1.9485000000000001 1.7639 L 4.051500000000001 1.7639 L 2.3502 3 L 3 1 Z" fill="#da121a"/>
+  </g>
+</svg>

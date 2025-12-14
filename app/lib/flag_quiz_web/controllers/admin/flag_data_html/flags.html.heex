@@ -1,0 +1,7 @@
+<ul>
+  <%= for flag <- @flags do %>
+    <li>
+      <img src={~p"/assets/flags/#{@continent}/#{@country}/#{Map.get(flag, "filename")}"} width="300"/>
+    </li>
+  <% end %>
+</ul>

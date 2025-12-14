@@ -1,0 +1,7 @@
+<ul>
+  <%= for continent <- @continents do %>
+    <li>
+      <a href={~p"/admin/continents/#{continent}"}>{continent}</a>
+    </li>
+  <% end %>
+</ul>

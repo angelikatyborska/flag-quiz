@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="900" height="600">
+  <g id="stripes">
+    <path id="stripe1" d="M0 0h900v600H0z" fill="#0032A0"/>
+    <path id="half-stripe1" d="M0 0h300v450H0z" fill="#FFF"/>
+    <path id="stripe2" fill="#DA291C" d="M0 300h900v300H0z"/>
+    <path id="half-stripe1-second-half" d="M0 299h300v451H0z" fill="#FFF" style="display: block"/>
+  </g>
+  <g id="main-symbol-wrapper" style="transform: translateX(0) translateY(150px); transform-box: fill-box; transform-origin: center;">
+  <g id="main-symbol" fill="#0032A0">
+    <g transform="translate(150 150)">
+      <g id="b">
+        <path id="a" d="M0-75V0h37.5" transform="rotate(18 0 -75)"/>
+        <use xlink:href="#a" transform="scale(-1 1)"/>
+      </g>
+      <use xlink:href="#b" transform="rotate(72)"/>
+      <use xlink:href="#b" transform="rotate(144)"/>
+      <use xlink:href="#b" transform="rotate(216)"/>
+      <use xlink:href="#b" transform="rotate(288)"/>
+    </g>
+  </g>
+  </g>
+</svg>

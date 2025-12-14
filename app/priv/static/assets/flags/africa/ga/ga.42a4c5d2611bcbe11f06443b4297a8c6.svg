@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="750">
+    <g id="stripes">
+    <path id="stripe3" d="M0 0h1000v750H0z" fill="#fcd116"/><path id="stripe2" d="M0 0h1000v500H0z" fill="#3a75c4"/><path id="stripe1" fill="#009e60" d="M0 0h1000v250H0z"/>
+    </g>
+</svg>
